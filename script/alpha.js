@@ -13,6 +13,12 @@ function handleKeyboardButtonPress(event) {
     // get what i have press
     console.log( 'i have pressed',playPressed);
 
+    // stop the game if pressed 'esc'
+    if(playPressed === 'Escape'){
+        gameOver();
+    }
+
+
     // get the expected press
     const currentAlphabetElement = document.getElementById('current-alpha');
     const currentAlphabet = currentAlphabetElement.innerText;
@@ -22,13 +28,38 @@ function handleKeyboardButtonPress(event) {
     // check matched or not
     if(playPressed === expectedAlphabet){
         console.log('you win');
+        // score update
+        const currentScoreElement = document.getElementById('current-score');
+        const currentScoreText = currentScoreElement.innerText;
+        const currentScore = parseInt(currentScoreText);
+        console.log(currentScore);
+        // increase the score
+        const newScore = currentScore + 1;
+        // show the update score
+        currentScoreElement.innerText = newScore;
         console.log('you have pressed correctly', expectedAlphabet);
+
         // for remove the background color of pressed key
         removeBg(expectedAlphabet);
         continueGame();
     }
     else{
         console.log('you lose');
+        // get the current life number
+        const currentLifeElement = document.getElementById('current-life');
+        const currentLifeText = currentLifeElement.innerText;
+        const currentLife = parseInt(currentLifeText);
+
+        // reduce the life count
+        const newLife = currentLife - 1;
+
+        // display the updated life count
+        currentLifeElement.innerText = newLife;
+// game-over
+        if (newLife === 0) {
+            gameOver();
+            
+        }
     }
     
 }
@@ -44,8 +75,36 @@ function continueGame() {
 }
 function play() {
     hideElement('home-screen');
+    hideElement('final-score');
     showElement('play-ground');
+
+    // reset life and score
+
+    setElementValueById('current-life' , 5);
+    setElementValueById('current-score', 0);
+
+
+    
+
+
+
+
     continueGame();
 
     
+}
+
+function gameOver() {
+   hideElement('play-ground');
+   showElement('final-score'); 
+
+//    update final score
+const lastScore = getElementValueById('current-score');
+setElementValueById('last-score', lastScore);
+
+
+// clear the last key bg
+const currentAlphabet =getText('current-alpha');
+removeBg(currentAlphabet);
+
 }
